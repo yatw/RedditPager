@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_main_activity"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.redditpager.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_pagingFragment"
+            app:destination="@id/pagingFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_mediatorFragment"
+            app:destination="@id/mediatorFragment" />
+    </fragment>
+
+
+    <!-- UI -->
+    <fragment
+        android:id="@+id/pagingFragment"
+        android:name="com.example.redditpager.paging3.PagingFragment"
+        android:label="Pager3Fragment" />
+
+    <fragment
+        android:id="@+id/mediatorFragment"
+        android:name="com.example.redditpager.remoteMediator.MediatorFragment"
+        android:label="Pager3MediatorFragment" />
+
+
+
+
+</navigation>
