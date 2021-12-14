@@ -4,9 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.redditpager.api.AuthHelper
 import com.example.redditpager.databinding.FragmentHomeBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import java.lang.Exception
 
 
 class HomeFragment: Fragment() {
@@ -24,6 +29,15 @@ class HomeFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        runBlocking(Dispatchers.IO) {
+            try{
+                AuthHelper.authenticate(requireContext())
+            }catch (e: Exception){
+                e.printStackTrace()
+                Toast.makeText(requireContext(), "reddit authentication failed, check wifi", Toast.LENGTH_LONG).show()
+            }
+        }
 
         binding.btnPaging.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_pagingFragment)
