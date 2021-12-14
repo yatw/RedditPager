@@ -2,8 +2,6 @@ package com.example.redditpager.api
 
 import androidx.annotation.WorkerThread
 import com.example.redditpager.models.EnvelopedSubmissionListing
-import java.lang.IllegalStateException
-
 
 class SubmissionClient(
     private val api: RedditApi,
