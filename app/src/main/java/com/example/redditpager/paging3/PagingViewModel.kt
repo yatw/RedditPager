@@ -4,12 +4,13 @@ package com.example.redditpager.paging3
 import androidx.lifecycle.*
 import androidx.paging.*
 import androidx.savedstate.SavedStateRegistryOwner
+import com.example.redditpager.db.Post
 import com.example.redditpager.models.EnvelopedSubmission
-import com.example.redditpager.models.Submission
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 
+@ExperimentalPagingApi
 class PagerViewModel(
     private val useMediator: Boolean,
     private val repository: PagingRepository,
@@ -30,8 +31,12 @@ class PagerViewModel(
 
         pagingDataFlow = searches
             .flatMapConcat {
-                getSubmission(subReddit = it.query)
-            }
+                if (useMediator){
+                    getSubmissionWithMediator(subReddit = it.query)
+                }else{
+                    getSubmission(subReddit = it.query)
+
+                }            }
             .cachedIn(viewModelScope)
 
         accept = { action ->
@@ -51,6 +56,46 @@ class PagerViewModel(
                 val sub = it.submission
                     ListItem.Sub(sub.title, sub.url, sub.ups)
                 }
+            }
+            .map { it: PagingData<ListItem.Sub> ->
+                it.insertSeparators { before, after ->
+                    if (after == null) {
+                        // we're at the end of the list
+                        return@insertSeparators null
+                    }
+
+                    if (before == null) {
+                        // we're at the beginning of the list
+                        return@insertSeparators ListItem.Separator("${after.round}k ups")
+                    }
+
+                    // check between 2 items
+                    if (before.round != after.round) {
+                        if (after.round >= 1) {
+                            ListItem.Separator("${after.round}k ups")
+                        } else {
+                            ListItem.Separator("< 1000 ups")
+                        }
+                    } else {
+                        // no separator
+                        null
+                    }
+                }
+            }
+
+
+
+
+    @ExperimentalPagingApi
+    private fun getSubmissionWithMediator(subReddit: String): Flow<PagingData<ListItem>> =
+        repository.getSubmissionsWithMediator(subReddit)
+            .map { pagingData ->
+                pagingData.filter { it -> isImage(it.url)}
+            }
+            .map { pagingData: PagingData<Post> -> pagingData.map {
+                val url = it.url?: throw IllegalStateException("null url not filtered correctly")
+                ListItem.Sub(it.title, url, it.ups)
+            }
             }
             .map { it: PagingData<ListItem.Sub> ->
                 it.insertSeparators { before, after ->

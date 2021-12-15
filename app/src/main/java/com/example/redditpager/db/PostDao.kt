@@ -15,7 +15,8 @@ interface PostDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(post: Post): Long
 
-    // todo select
+    @Query("SELECT * FROM post")
+    fun getPosts(): PagingSource<Int, Post>
 
     @Query("DELETE FROM post")
     suspend fun clearPosts()

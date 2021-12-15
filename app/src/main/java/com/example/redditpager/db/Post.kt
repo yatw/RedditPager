@@ -8,6 +8,6 @@ import com.google.gson.annotations.SerializedName
 data class Post(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @SerializedName("title") val title: String,
-    @SerializedName("url") val url: String,
+    @SerializedName("url") val url: String?,
     @SerializedName("ups") val ups: Int
 )

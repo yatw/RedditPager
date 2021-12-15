@@ -2,6 +2,7 @@ package com.example.redditpager.paging3
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +12,7 @@ import com.example.redditpager.databinding.ItemSeparatorBinding
 import com.example.redditpager.databinding.ItemSubmissionBinding
 import timber.log.Timber
 
+@ExperimentalPagingApi
 class SubmissionAdapter: PagingDataAdapter<PagerViewModel.ListItem, RecyclerView.ViewHolder>(UIMODEL_COMPARATOR) {
 
     companion object {

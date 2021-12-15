@@ -11,9 +11,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import com.example.redditpager.api.AuthHelper
 import com.example.redditpager.databinding.FragmentPagingBinding
+import com.example.redditpager.db.PagerDatabase
 import com.example.redditpager.paging3.HeaderFooterAdapter
 import com.example.redditpager.paging3.PagerViewModel
 import com.example.redditpager.paging3.PagingRepository
@@ -28,12 +30,14 @@ class MediatorFragment: Fragment() {
     private lateinit var binding: FragmentPagingBinding
 
     // get the view model
+    @ExperimentalPagingApi
     val viewModel: PagerViewModel by lazy {
 
         val submissionClient = AuthHelper.getClient().submissionClient
+        val db = PagerDatabase.getInstance(requireContext())
 
         ViewModelProvider(this,
-            PagerViewModel.Factory(this, PagingRepository(submissionClient), true)
+            PagerViewModel.Factory(this, PagingRepository(submissionClient, db), true)
         ).get(PagerViewModel::class.java)
     }
 
@@ -49,6 +53,7 @@ class MediatorFragment: Fragment() {
 
 
 
+    @ExperimentalPagingApi
     @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

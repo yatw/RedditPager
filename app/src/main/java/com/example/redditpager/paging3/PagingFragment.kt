@@ -11,9 +11,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import com.example.redditpager.api.AuthHelper
 import com.example.redditpager.databinding.FragmentPagingBinding
+import com.example.redditpager.db.PagerDatabase
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -25,12 +27,14 @@ class PagingFragment: Fragment() {
     private lateinit var binding: FragmentPagingBinding
 
     // get the view model
+    @ExperimentalPagingApi
     val viewModel: PagerViewModel by lazy {
 
         val submissionClient = AuthHelper.getClient().submissionClient
+        val db = PagerDatabase.getInstance(requireContext())
 
         ViewModelProvider(this,
-            PagerViewModel.Factory(this, PagingRepository(submissionClient), false)
+            PagerViewModel.Factory(this, PagingRepository(submissionClient, db), false)
         ).get(PagerViewModel::class.java)
     }
 
@@ -44,6 +48,7 @@ class PagingFragment: Fragment() {
     }
 
 
+    @ExperimentalPagingApi
     @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

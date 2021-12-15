@@ -14,7 +14,8 @@ interface PostKeysDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(remoteKey: PostKeys): Long
 
-    // todo select
+    @Query("SELECT * FROM post_keys WHERE postId = :id")
+    suspend fun remoteKeysId(id: Long): PostKeys?
 
     @Query("DELETE FROM post_keys")
     suspend fun clearRemoteKeys()
