@@ -49,7 +49,10 @@ class PagingFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = SubmissionAdapter()
-        binding.list.adapter = adapter
+        binding.list.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = HeaderFooterAdapter{ adapter.retry()},
+            footer = HeaderFooterAdapter{ adapter.retry()}
+        )
 
         val pagingData = viewModel.pagingDataFlow
 
