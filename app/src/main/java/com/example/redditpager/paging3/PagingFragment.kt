@@ -30,7 +30,7 @@ class PagingFragment: Fragment() {
         val submissionClient = AuthHelper.getClient().submissionClient
 
         ViewModelProvider(this,
-            PagerViewModel.Factory(this, PagingRepository(submissionClient))
+            PagerViewModel.Factory(this, PagingRepository(submissionClient), false)
         ).get(PagerViewModel::class.java)
     }
 

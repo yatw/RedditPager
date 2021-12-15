@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 
 
 class PagerViewModel(
+    private val useMediator: Boolean,
     private val repository: PagingRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -96,7 +97,8 @@ class PagerViewModel(
 
     class Factory(
         owner: SavedStateRegistryOwner,
-        private val repository: PagingRepository
+        private val repository: PagingRepository,
+        private val useMediator: Boolean
     ) : AbstractSavedStateViewModelFactory(owner, null) {
 
         override fun <T : ViewModel?> create(
@@ -106,7 +108,7 @@ class PagerViewModel(
         ): T {
             if (modelClass.isAssignableFrom(PagerViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return PagerViewModel(repository, handle) as T
+                return PagerViewModel(useMediator, repository, handle) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }
