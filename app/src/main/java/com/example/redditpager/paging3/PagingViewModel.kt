@@ -51,6 +51,34 @@ class PagerViewModel(
                     ListItem.Sub(sub.title, sub.url, sub.ups)
                 }
             }
+            .map { it: PagingData<ListItem.Sub> ->
+                it.insertSeparators { before, after ->
+                    if (after == null) {
+                        // we're at the end of the list
+                        return@insertSeparators null
+                    }
+
+                    if (before == null) {
+                        // we're at the beginning of the list
+                        return@insertSeparators ListItem.Separator("${after.round}k ups")
+                    }
+
+                    // check between 2 items
+                    if (before.round != after.round) {
+                        if (after.round >= 1) {
+                            ListItem.Separator("${after.round}k ups")
+                        } else {
+                            ListItem.Separator("< 1000 ups")
+                        }
+                    } else {
+                        // no separator
+                        null
+                    }
+                }
+            }
+
+    private val ListItem.Sub.round: Int
+        get() = this.ups / 1000
 
     private fun isImage(url: String?): Boolean{
         url?.let {
