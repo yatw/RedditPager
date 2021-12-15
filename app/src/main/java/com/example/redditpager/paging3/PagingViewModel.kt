@@ -43,14 +43,23 @@ class PagerViewModel(
 
     private fun getSubmission(subReddit: String): Flow<PagingData<ListItem>> =
         repository.getSubmissions(subReddit)
+            .map { pagingData ->
+                pagingData.filter { it -> isImage(it.submission.url)}
+            }
             .map { pagingData: PagingData<EnvelopedSubmission> -> pagingData.map {
                 val sub = it.submission
                     ListItem.Sub(sub.title, sub.url, sub.ups)
                 }
             }
 
+    private fun isImage(url: String?): Boolean{
+        url?.let {
+            return it.endsWith("jpg") || it.endsWith("png")
+        }
+        return false
+    }
 
-    class Search(val query: String)
+    data class Search(val query: String)
 
     sealed class ListItem {
         data class Sub(val title: String, val url: String?, val ups: Int) : ListItem()
