@@ -22,9 +22,10 @@ class PagingRepository(
 
         return Pager(
             config = PagingConfig(
-                pageSize = 15,
+                pageSize = 5,
+                initialLoadSize = 15,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = 20
             ),
             pagingSourceFactory = { RedditPagingSource(subReddit, client)}
         ).flow
@@ -37,6 +38,7 @@ class PagingRepository(
         return Pager(
             config = PagingConfig(
                 pageSize = 5,
+                initialLoadSize = 15,
                 enablePlaceholders = false,
                 maxSize = 20
             ),

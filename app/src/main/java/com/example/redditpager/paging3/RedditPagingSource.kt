@@ -7,6 +7,7 @@ import com.example.redditpager.models.EnvelopedSubmission
 import com.example.redditpager.models.EnvelopedSubmissionListing
 import com.example.redditpager.models.SubmissionListing
 import retrofit2.HttpException
+import timber.log.Timber
 import java.io.IOException
 
 
@@ -60,13 +61,26 @@ class RedditPagingSource(
         val page = params.key
         return try {
 
+            Timber.i("Fetching from PagingSource...")
+
             val response: EnvelopedSubmissionListing =
-                submissionClient.getSubmission(subReddit, params.loadSize, null, page)
+                submissionClient.getSubmission(
+                    subReddit,
+                    if (page == "") 15 else params.loadSize,
+                    null,
+                    page)
 
             val data: SubmissionListing = response.data
+            Timber.i("Fetched ${data.envelopedSubmissions.size} items")
 
 
-            val currentPage = keyMap[page]
+            val currentPage = if (page != null) keyMap[page] else {
+
+                // using "" to represent the initial load, it is needed when you scroll back back up
+                val first = Node(value = "", prev = null)
+                keyMap[""] = first
+                first
+            }
 
             // create next page node
             data.after?.let {
