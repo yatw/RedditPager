@@ -1,5 +1,6 @@
 package com.example.redditpager.db
 
+import androidx.paging.DataSource
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
@@ -17,6 +18,10 @@ interface PostDao {
 
     @Query("SELECT * FROM post")
     fun getPosts(): PagingSource<Int, Post>
+
+    @Query("SELECT * FROM post")
+    fun getPostsFactory(): DataSource.Factory<Int, Post>
+
 
     @Query("DELETE FROM post")
     suspend fun clearPosts()

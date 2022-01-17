@@ -21,6 +21,9 @@ class PagerViewModel(
 
     val pagingDataFlow: Flow<PagingData<ListItem>>
 
+    val pagingDataLiveData: LiveData<PagedList<ListItem>>
+
+
     init {
 
         val actionStateFlow = MutableSharedFlow<Search>()
@@ -35,8 +38,8 @@ class PagerViewModel(
                     getSubmissionWithMediator(subReddit = it.query)
                 }else{
                     getSubmission(subReddit = it.query)
-
-                }            }
+                }
+            }
             .cachedIn(viewModelScope)
 
         accept = { action ->
@@ -44,6 +47,30 @@ class PagerViewModel(
                 actionStateFlow.emit(action)
             }
         }
+
+
+        // for paging 2
+        pagingDataLiveData = getSubmissionWithPaging2()
+    }
+
+    private fun getSubmissionWithPaging2(): LiveData<PagedList<ListItem>>{
+
+        val pagedListConfig: PagedList.Config = PagedList.Config.Builder().apply {
+            setEnablePlaceholders(false)
+            setInitialLoadSizeHint(10)
+            setPageSize(50)
+        }.build()
+
+
+        val postFactory: DataSource.Factory<Int, Post> = repository.getSubmissionsWithPager2()
+        val listItemFactory: DataSource.Factory<Int, ListItem> = postFactory.map { p: Post ->
+            ListItem.Sub(p.title, p.url, p.ups)
+        }
+        val result: LiveData<PagedList<PagerViewModel.ListItem>> = LivePagedListBuilder(
+            listItemFactory,
+            pagedListConfig
+        ).build()
+        return result
     }
 
 
@@ -53,7 +80,7 @@ class PagerViewModel(
                 pagingData.filter { it -> isImage(it.submission.url)}
             }
             .map { pagingData: PagingData<EnvelopedSubmission> -> pagingData.map {
-                val sub = it.submission
+                    val sub = it.submission
                     ListItem.Sub(sub.title, sub.url, sub.ups)
                 }
             }

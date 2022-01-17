@@ -46,6 +46,10 @@ class HomeFragment: Fragment() {
         binding.btnMediator.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_mediatorFragment)
         }
+
+        binding.btnPaging2.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_paging2Fragment)
+        }
     }
 
 

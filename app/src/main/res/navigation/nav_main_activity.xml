@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_homeFragment_to_mediatorFragment"
             app:destination="@id/mediatorFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_paging2Fragment"
+            app:destination="@id/paging2Fragment" />
     </fragment>
 
 
@@ -27,8 +30,10 @@
         android:id="@+id/mediatorFragment"
         android:name="com.example.redditpager.remoteMediator.MediatorFragment"
         android:label="Pager3MediatorFragment" />
-
-
+    <fragment
+        android:id="@+id/paging2Fragment"
+        android:name="com.example.redditpager.paging2.Paging2Fragment"
+        android:label="Paging2Fragment" />
 
 
 </navigation>

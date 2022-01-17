@@ -57,6 +57,8 @@ dependencies {
     // architecture components
     implementation "androidx.core:core-ktx:1.7.0"
     implementation "androidx.paging:paging-runtime-ktx:3.1.0"
+    implementation("androidx.paging:paging-runtime:2.1.2") //Paging 2 Implementation
+
 
 
     // navigation

@@ -107,6 +107,13 @@ class PostMediator(
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, Post>): PostKeys? {
         // Get the first page that was retrieved, that contained items.
         // From that first page, get the first item
+
+        return state.pages.firstOrNull{
+            it.data.isNotEmpty()
+        }?.data?.firstOrNull()?.let { it ->
+            database.postKeysDao().remoteKeysId(it.id)
+        }
+
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { repo ->
                 // Get the remote keys of the first items retrieved
